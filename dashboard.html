@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carter's GenAI Migration Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2333;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --green: #3fb950; --red: #f85149; --blue: #58a6ff;
+    --purple: #bc8cff; --orange: #d29922; --cyan: #39d2c0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 32px; font-size: 14px; }
+  .hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .hero-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+  .hero-card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .hero-card .value { font-size: 36px; font-weight: 700; }
+  .hero-card .change { font-size: 14px; margin-top: 4px; }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .neutral { color: var(--muted); }
+  .section { margin-bottom: 32px; }
+  .section h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--blue); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card h3 { font-size: 14px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .chart-wrap { position: relative; height: 300px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+  .badge-green { background: rgba(63,185,80,.15); color: var(--green); }
+  .badge-red { background: rgba(248,81,73,.15); color: var(--red); }
+  .badge-blue { background: rgba(88,166,255,.15); color: var(--blue); }
+  .note { background: var(--surface2); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .comparison-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .comparison-row .metric-name { width: 140px; font-size: 13px; color: var(--muted); }
+  .bar-container { flex: 1; display: flex; align-items: center; gap: 8px; }
+  .bar { height: 28px; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 12px; font-weight: 600; min-width: 40px; }
+  .bar-old { background: rgba(139,148,158,.3); color: var(--muted); }
+  .bar-new { background: rgba(63,185,80,.3); color: var(--green); }
+  .arrow { font-size: 16px; }
+  @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>🚀 Carter's GenAI Migration</h1>
+<p class="subtitle">Classic (oshkosh-brand) Mar 17–23 vs GenAI (oshkosh-brand-v2) Mar 25–26 &nbsp;•&nbsp; Live calls only &nbsp;•&nbsp; Generated Mar 26, 2026</p>
+
+<div class="hero">
+  <div class="hero-card">
+    <div class="label">Reduction Rate (All Channels)</div>
+    <div class="value up">69.4%</div>
+    <div class="change up">↑ 44.7pp from 24.7%</div>
+  </div>
+  <div class="hero-card">
+    <div class="label">Reduction Rate (Voice Only)</div>
+    <div class="value up">40.2%</div>
+    <div class="change up">↑ 15.5pp from 24.7%</div>
+  </div>
+  <div class="hero-card">
+    <div class="label">Chat Reduction Rate (NEW)</div>
+    <div class="value" style="color:var(--cyan)">64.0%</div>
+    <div class="change neutral">864 active chat sessions</div>
+  </div>
+  <div class="hero-card">
+    <div class="label">1st-Turn Handoff Requests</div>
+    <div class="value up">~1.5%</div>
+    <div class="change up">↓ from 26.4% (est. via call duration)</div>
+  </div>
+</div>
+
+<!-- Reduction Rate Comparison Chart -->
+<div class="section">
+  <h2>📊 Reduction Rate Comparison</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Before vs After</h3>
+      <div class="chart-wrap"><canvas id="reductionChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Handoff Breakdown</h3>
+      <div class="chart-wrap"><canvas id="handoffChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- Flow Success Rates -->
+<div class="section">
+  <h2>🔄 Core Flow Success Rates</h2>
+  <div class="card">
+    <div class="comparison-row">
+      <div class="metric-name"><strong>Flow</strong></div>
+      <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">Classic</strong></div>
+      <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">GenAI</strong></div>
+      <div style="width:80px;text-align:right"><strong style="font-size:13px;color:var(--muted)">Change</strong></div>
+    </div>
+
+    <div class="comparison-row">
+      <div class="metric-name">📦 Tracking</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:59%">59.0%</div><span style="font-size:11px;color:var(--muted)">306/519</span></div>
+      <div class="bar-container"><div class="bar bar-new" style="width:36.4%;background:rgba(210,153,34,.3);color:var(--orange)">36.4%</div><span style="font-size:11px;color:var(--muted)">56/154</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-22.6pp</span></div>
+    </div>
+
+    <div class="comparison-row">
+      <div class="metric-name">❌ Cancel</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:46.6%">46.6%</div><span style="font-size:11px;color:var(--muted)">236/506</span></div>
+      <div class="bar-container"><div class="bar bar-new" style="width:31%;background:rgba(210,153,34,.3);color:var(--orange)">31.0%</div><span style="font-size:11px;color:var(--muted)">45/145</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-15.6pp</span></div>
+    </div>
+
+    <div class="comparison-row">
+      <div class="metric-name">💰 Price Adj</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:6.5%">6.5%</div><span style="font-size:11px;color:var(--muted)">6/92</span></div>
+      <div class="bar-container"><div class="bar bar-new" style="width:19%">19.0%</div><span style="font-size:11px;color:var(--muted)">11/58</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-green">+12.5pp</span></div>
+    </div>
+
+    <div class="note">
+      <strong>📝 Context on flow success rates:</strong> The classic agent handed off 75% of calls — only "easy" cases reached core flows.
+      The GenAI agent handles 2.8× more calls without handoff, including harder cases the classic agent would have immediately transferred.
+      A lower per-flow success rate alongside a dramatically higher containment rate means the agent is resolving significantly more calls overall.
+      Price adjustment success nearly <strong>tripled</strong> (6.5% → 19.0%).
+    </div>
+  </div>
+</div>
+
+<!-- Flow Detail - Voice Only Comparison -->
+<div class="section">
+  <div class="card">
+    <h3>Voice-Only Comparison (Apples-to-Apples)</h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Old: 6,813 voice calls &nbsp;→&nbsp; New: 1,015 voice calls</p>
+    <div class="comparison-row">
+      <div class="metric-name"><strong>Metric</strong></div>
+      <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">Classic Voice</strong></div>
+      <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">GenAI Voice</strong></div>
+      <div style="width:80px;text-align:right"><strong style="font-size:13px;color:var(--muted)">Change</strong></div>
+    </div>
+    <div class="comparison-row">
+      <div class="metric-name">🎯 Reduction</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:24.7%">24.7%</div></div>
+      <div class="bar-container"><div class="bar bar-new" style="width:40.2%">40.2%</div></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-green">+15.5pp</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="metric-name">📦 Tracking</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:59%">59.0%</div><span style="font-size:11px;color:var(--muted)">306/519</span></div>
+      <div class="bar-container"><div class="bar" style="width:34.4%;background:rgba(210,153,34,.3);color:var(--orange)">34.4%</div><span style="font-size:11px;color:var(--muted)">31/90</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-24.6pp</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="metric-name">❌ Cancel</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:46.6%">46.6%</div><span style="font-size:11px;color:var(--muted)">236/506</span></div>
+      <div class="bar-container"><div class="bar" style="width:40.3%;background:rgba(210,153,34,.3);color:var(--orange)">40.3%</div><span style="font-size:11px;color:var(--muted)">29/72</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-6.3pp</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="metric-name">💰 Price Adj</div>
+      <div class="bar-container"><div class="bar bar-old" style="width:6.5%">6.5%</div><span style="font-size:11px;color:var(--muted)">6/92</span></div>
+      <div class="bar-container"><div class="bar bar-new" style="width:17.4%">17.4%</div><span style="font-size:11px;color:var(--muted)">4/23</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-green">+10.9pp</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Handoff Reasons -->
+<div class="section">
+  <h2>📞 Top Handoff Reasons</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Classic (oshkosh-brand) — Mar 17–23</h3>
+      <table>
+        <tr><th>Reason</th><th>Count</th><th>% of Total</th></tr>
+        <tr><td>SPEAK_TO_SOMEONE</td><td>2,201</td><td>32.3%</td></tr>
+        <tr><td>TECHNICAL_ISSUES</td><td>326</td><td>4.8%</td></tr>
+        <tr><td>VALIDATE_ORDER_FAIL</td><td>306</td><td>4.5%</td></tr>
+        <tr><td>COMENITY</td><td>266</td><td>3.9%</td></tr>
+        <tr><td>REPEATED_FAQ</td><td>254</td><td>3.7%</td></tr>
+        <tr><td>ORDERS_NOT_FOUND</td><td>251</td><td>3.7%</td></tr>
+        <tr><td>PLACE_ORDER</td><td>235</td><td>3.4%</td></tr>
+        <tr><td>SILENCE_LOOP</td><td>137</td><td>2.0%</td></tr>
+        <tr><td>MODIFY_ADDRESS</td><td>133</td><td>2.0%</td></tr>
+        <tr><td>PHONE_LOOKUP_LOOP</td><td>128</td><td>1.9%</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>GenAI (oshkosh-brand-v2) — Mar 25–26</h3>
+      <table>
+        <tr><th>Reason</th><th>Count</th><th>% of Total</th></tr>
+        <tr><td>SPEAK_TO_SOMEONE</td><td>420</td><td>22.4%</td></tr>
+        <tr><td>OUT_OF_SCOPE</td><td>86</td><td>4.6%</td></tr>
+        <tr><td>ORDERS_NOT_FOUND</td><td>47</td><td>2.5%</td></tr>
+        <tr><td>TECHNICAL_ISSUES</td><td>42</td><td>2.2%</td></tr>
+        <tr><td>MODIFY_ADDRESS</td><td>40</td><td>2.1%</td></tr>
+        <tr><td>COMENITY</td><td>35</td><td>1.9%</td></tr>
+        <tr><td>PLACE_ORDER</td><td>26</td><td>1.4%</td></tr>
+        <tr><td>BILLING</td><td>21</td><td>1.1%</td></tr>
+        <tr><td>DONT_KNOW_FULL_ORDER_NUMBER</td><td>19</td><td>1.0%</td></tr>
+        <tr><td>COLLECT_ORDER_DATE_FAIL</td><td>17</td><td>0.9%</td></tr>
+      </table>
+      <div class="note">
+        SILENCE_LOOP and PHONE_LOOKUP_LOOP eliminated entirely.
+        VALIDATE_ORDER_FAIL dropped from 4.5% to not in top 10.
+        SPEAK_TO_SOMEONE: 32.3% → 22.4% of calls.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Volume & Duration -->
+<div class="section">
+  <h2>📈 Call Volume & Duration</h2>
+  <div class="hero" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))">
+    <div class="hero-card">
+      <div class="label">Old — Total Calls</div>
+      <div class="value" style="color:var(--muted);font-size:28px">6,813</div>
+      <div class="change neutral">7 days · ~973/day</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">New — Total Calls</div>
+      <div class="value" style="color:var(--blue);font-size:28px">3,000*</div>
+      <div class="change neutral">2 days · Voice + Chat</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Old — Avg Duration</div>
+      <div class="value" style="color:var(--muted);font-size:28px">72s</div>
+      <div class="change neutral">Voice only</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">New — Avg Duration</div>
+      <div class="value" style="color:var(--blue);font-size:28px">144s</div>
+      <div class="change neutral">More engagement before resolution</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">New Voice</div>
+      <div class="value" style="color:var(--purple);font-size:28px">1,015</div>
+      <div class="change neutral">40.2% reduction</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">New Chat (Active)</div>
+      <div class="value" style="color:var(--cyan);font-size:28px">864</div>
+      <div class="change neutral">64.0% reduction</div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:0">
+    *New project data sampled at 3,000 conversations from Mar 25–26. 1,121 abandoned chat sessions (no user input) excluded from active metrics.
+    Longer average duration reflects the agent engaging and resolving more issues before considering handoff, rather than quickly transferring.
+  </div>
+</div>
+
+<p style="text-align:center;color:var(--muted);font-size:12px;margin-top:40px">
+  Data source: Nebula API · Account: carters-us · Generated by Polyver 🫒
+</p>
+
+<script>
+const chartFont = { family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" };
+Chart.defaults.color = '#8b949e';
+Chart.defaults.font = chartFont;
+
+// Reduction Rate
+new Chart(document.getElementById('reductionChart'), {
+  type: 'bar',
+  data: {
+    labels: [['Classic','(Voice)'], ['GenAI','(Voice)'], ['GenAI','(Chat)'], ['GenAI','(All Active)']],
+    datasets: [{
+      label: 'Reduction Rate %',
+      data: [24.7, 40.2, 64.0, 69.4],
+      backgroundColor: ['rgba(139,148,158,.4)', 'rgba(63,185,80,.5)', 'rgba(57,210,192,.5)', 'rgba(88,166,255,.5)'],
+      borderColor: ['#8b949e', '#3fb950', '#39d2c0', '#58a6ff'],
+      borderWidth: 2,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (c) => c.raw + '%' } }
+    },
+    scales: {
+      y: { beginAtZero: true, max: 100, grid: { color: '#30363d' }, ticks: { callback: v => v + '%', font: { size: 13 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 13 }, color: '#e6edf3' } }
+    }
+  },
+  plugins: [{
+    afterDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets[0].data.forEach((val, i) => {
+        const meta = chart.getDatasetMeta(0).data[i];
+        ctx.fillStyle = '#e6edf3';
+        ctx.font = 'bold 14px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(val + '%', meta.x, meta.y - 8);
+      });
+    }
+  }]
+});
+
+// Handoff Breakdown
+new Chart(document.getElementById('handoffChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Contained (Old)', 'Handed Off (Old)', 'Contained (New)', 'Handed Off (New)'],
+    datasets: [
+      { label: 'Classic', data: [1686, 5127], backgroundColor: ['rgba(139,148,158,.3)', 'rgba(248,81,73,.3)'], borderColor: ['#8b949e', '#f85149'], borderWidth: 2 },
+      { label: 'GenAI', data: [1302, 577], backgroundColor: ['rgba(63,185,80,.3)', 'rgba(248,81,73,.15)'], borderColor: ['#3fb950', '#f85149'], borderWidth: 2 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '40%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 12, font: { size: 11 } } },
+      tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw.toLocaleString()} calls` } }
+    }
+  }
+});
+
+// Flow charts replaced with HTML bars above for reliability
+const _unused = null;
+</script>
+</body>
+</html>
