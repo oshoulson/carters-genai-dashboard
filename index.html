@@ -10,10 +10,10 @@
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);padding:24px;max-width:1200px;margin:0 auto}
   h1{font-size:28px;font-weight:700;margin-bottom:4px}
   .subtitle{color:var(--muted);margin-bottom:32px;font-size:14px}
-  .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+  .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:32px}
   .hero-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
   .hero-card .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-  .hero-card .value{font-size:36px;font-weight:700}
+  .hero-card .value{font-size:42px;font-weight:700}
   .hero-card .change{font-size:14px;margin-top:4px}
   .up{color:var(--green)}.down{color:var(--red)}.neutral{color:var(--muted)}
   .section{margin-bottom:32px}
@@ -40,28 +40,18 @@
 <body>
 
 <h1>🚀 Carter's GenAI Migration — Voice Only</h1>
-<p class="subtitle">Intent-Based (oshkosh-brand) Mar 17–23 vs GenAI (oshkosh-brand-v2) Mar 25–26 &nbsp;•&nbsp; Voice calls only &nbsp;•&nbsp; Generated Mar 26, 2026</p>
+<p class="subtitle">Intent-Based (oshkosh-brand) all-time vs GenAI (oshkosh-brand-v2) Mar 25–26 &nbsp;•&nbsp; Voice calls only &nbsp;•&nbsp; Reduction = contained + CashStar + Comenity &nbsp;•&nbsp; Generated Mar 26, 2026</p>
 
 <div class="hero">
   <div class="hero-card">
-    <div class="label">Old Reduction Rate</div>
-    <div class="value neutral">24.7%</div>
-    <div class="change neutral">Mar 17–23</div>
+    <div class="label">Intent-Based Reduction Rate</div>
+    <div class="value neutral">29.9%</div>
+    <div class="change neutral">All-time (Feb 27 – Mar 24)</div>
   </div>
   <div class="hero-card">
-    <div class="label">New Reduction Rate</div>
-    <div class="value up">40.2%</div>
-    <div class="change up">↑ 15.5pp</div>
-  </div>
-  <div class="hero-card">
-    <div class="label">March 25</div>
-    <div class="value" style="font-size:28px;color:var(--purple)">34.0%</div>
-    <div class="change neutral">&nbsp;</div>
-  </div>
-  <div class="hero-card">
-    <div class="label">March 26</div>
-    <div class="value" style="font-size:28px;color:var(--cyan)">50.8%</div>
-    <div class="change neutral">&nbsp;</div>
+    <div class="label">GenAI Reduction Rate</div>
+    <div class="value up">44.3%</div>
+    <div class="change up">↑ 14.4pp</div>
   </div>
 </div>
 
@@ -77,29 +67,28 @@
     </div>
     <div class="comparison-row">
       <div class="metric-name">📦 Tracking</div>
-      <div class="bar-container"><div class="bar bar-old" style="width:59%">59.0%</div></div>
+      <div class="bar-container"><div class="bar bar-old" style="width:58.9%">58.9%</div></div>
       <div class="bar-container"><div class="bar" style="width:34.4%;background:rgba(210,153,34,.3);color:var(--orange)">34.4%</div></div>
-      <div style="width:80px;text-align:right"><span class="badge badge-red">-24.6pp</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-24.5pp</span></div>
     </div>
     <div class="comparison-row">
       <div class="metric-name">❌ Cancel</div>
-      <div class="bar-container"><div class="bar bar-old" style="width:46.6%">46.6%</div></div>
+      <div class="bar-container"><div class="bar bar-old" style="width:44.9%">44.9%</div></div>
       <div class="bar-container"><div class="bar" style="width:40.3%;background:rgba(210,153,34,.3);color:var(--orange)">40.3%</div></div>
-      <div style="width:80px;text-align:right"><span class="badge badge-red">-6.3pp</span></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-4.6pp</span></div>
     </div>
     <div class="comparison-row">
       <div class="metric-name">💰 Price Adj</div>
-      <div class="bar-container"><div class="bar bar-old" style="width:6.5%">6.5%</div></div>
-      <div class="bar-container"><div class="bar bar-new" style="width:17.4%">17.4%</div></div>
-      <div style="width:80px;text-align:right"><span class="badge badge-green">+10.9pp</span></div>
+      <div class="bar-container"><div class="bar bar-old" style="width:22.6%">22.6%</div></div>
+      <div class="bar-container"><div class="bar" style="width:17.4%;background:rgba(210,153,34,.3);color:var(--orange)">17.4%</div></div>
+      <div style="width:80px;text-align:right"><span class="badge badge-red">-5.2pp</span></div>
     </div>
 
     <div class="note">
-      <strong>📝 Why are tracking &amp; cancel rates lower?</strong> The technical failure reasons are dramatically reduced
+      <strong>📝 Why are flow success rates lower?</strong> Technical failures are dramatically reduced
       (VALIDATE_ORDER_FAIL, PHONE_LOOKUP_LOOP eliminated). But more callers now <em>choose</em> to bail to a human mid-flow
       (SPEAK_TO_SOMEONE = 41% of tracking failures, 28% of cancel failures). The intent-based agent filtered most callers out
       before they entered flows. The GenAI agent lets more people in — and some opt out mid-flow.
-      Price adjustment success nearly <strong>tripled</strong>.
     </div>
   </div>
 </div>
@@ -109,23 +98,23 @@
   <h2>📞 Top Handoff Reasons (Voice)</h2>
   <div class="grid-2">
     <div class="card">
-      <h3>Intent-Based — Mar 17–23</h3>
+      <h3>Intent-Based (all-time)</h3>
       <table>
         <tr><th>Reason</th><th>%</th></tr>
-        <tr><td>SPEAK_TO_SOMEONE</td><td>32.3%</td></tr>
+        <tr><td>SPEAK_TO_SOMEONE</td><td>31.3%</td></tr>
+        <tr><td>VALIDATE_ORDER_FAIL</td><td>4.8%</td></tr>
         <tr><td>TECHNICAL_ISSUES</td><td>4.8%</td></tr>
-        <tr><td>VALIDATE_ORDER_FAIL</td><td>4.5%</td></tr>
-        <tr><td>COMENITY</td><td>3.9%</td></tr>
-        <tr><td>REPEATED_FAQ</td><td>3.7%</td></tr>
-        <tr><td>ORDERS_NOT_FOUND</td><td>3.7%</td></tr>
-        <tr><td>PLACE_ORDER</td><td>3.4%</td></tr>
-        <tr><td>SILENCE_LOOP</td><td>2.0%</td></tr>
-        <tr><td>MODIFY_ADDRESS</td><td>2.0%</td></tr>
-        <tr><td>PHONE_LOOKUP_LOOP</td><td>1.9%</td></tr>
+        <tr><td>ORDERS_NOT_FOUND</td><td>4.0%</td></tr>
+        <tr><td>COMENITY</td><td>3.8%</td></tr>
+        <tr><td>REPEATED_FAQ</td><td>3.5%</td></tr>
+        <tr><td>PLACE_ORDER</td><td>3.0%</td></tr>
+        <tr><td>SILENCE_LOOP</td><td>1.8%</td></tr>
+        <tr><td>BILLING</td><td>1.8%</td></tr>
+        <tr><td>OOD_LOOP</td><td>1.8%</td></tr>
       </table>
     </div>
     <div class="card">
-      <h3>GenAI — Mar 25–26</h3>
+      <h3>GenAI (Mar 25–26)</h3>
       <table>
         <tr><th>Reason</th><th>%</th></tr>
         <tr><td>SPEAK_TO_SOMEONE</td><td>32.8%</td></tr>
@@ -140,27 +129,27 @@
         <tr><td>DELIVERED_MORE_THAN_2_DAYS</td><td>1.1%</td></tr>
       </table>
       <div class="note">
-        VALIDATE_ORDER_FAIL dropped from 4.5% to not in top 10.
-        REPEATED_FAQ and PHONE_LOOKUP_LOOP eliminated from top 10.
+        VALIDATE_ORDER_FAIL dropped from 4.8% to not in top 10.
+        REPEATED_FAQ and OOD_LOOP eliminated from top 10.
         TECHNICAL_ISSUES: 4.8% → 1.9%.
       </div>
     </div>
   </div>
 </div>
 
-<!-- Volume -->
+<!-- Duration -->
 <div class="section">
-  <h2>📈 Call Volume & Duration (Voice)</h2>
+  <h2>📈 Avg Call Duration (Voice)</h2>
   <div class="hero" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
     <div class="hero-card">
-      <div class="label">Old — Avg Duration</div>
-      <div class="value" style="color:var(--muted);font-size:28px">72s</div>
+      <div class="label">Intent-Based</div>
+      <div class="value" style="color:var(--muted);font-size:28px">71s</div>
       <div class="change neutral">&nbsp;</div>
     </div>
     <div class="hero-card">
-      <div class="label">New — Avg Duration</div>
+      <div class="label">GenAI</div>
       <div class="value" style="color:var(--blue);font-size:28px">78s</div>
-      <div class="change neutral">+6s avg engagement</div>
+      <div class="change neutral">+7s avg engagement</div>
     </div>
   </div>
 </div>
