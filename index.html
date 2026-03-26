@@ -42,7 +42,7 @@
 <body>
 
 <h1>🚀 Carter's GenAI Migration — Voice Only</h1>
-<p class="subtitle">Classic (oshkosh-brand) Mar 17–23 vs GenAI (oshkosh-brand-v2) Mar 25–26 &nbsp;•&nbsp; Voice calls only &nbsp;•&nbsp; Generated Mar 26, 2026</p>
+<p class="subtitle">Intent-Based (oshkosh-brand) Mar 17–23 vs GenAI (oshkosh-brand-v2) Mar 25–26 &nbsp;•&nbsp; Voice calls only &nbsp;•&nbsp; Generated Mar 26, 2026</p>
 
 <div class="hero">
   <div class="hero-card">
@@ -88,7 +88,7 @@
   <div class="card">
     <div class="comparison-row">
       <div class="metric-name"><strong>Flow</strong></div>
-      <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">Classic</strong></div>
+      <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">Intent-Based</strong></div>
       <div class="bar-container"><strong style="font-size:13px;color:var(--muted)">GenAI</strong></div>
       <div style="width:80px;text-align:right"><strong style="font-size:13px;color:var(--muted)">Change</strong></div>
     </div>
@@ -112,9 +112,11 @@
     </div>
 
     <div class="note">
-      <strong>📝 Context:</strong> The classic agent handed off 75% of voice calls — only "easy" cases reached core flows.
-      The GenAI agent resolves 40% without handoff, taking on harder cases. A lower per-flow rate alongside higher containment
-      means MORE calls are being resolved overall. Price adjustment success nearly <strong>tripled</strong>.
+      <strong>📝 Why are tracking &amp; cancel rates lower?</strong> The technical failure reasons are dramatically reduced
+      (VALIDATE_ORDER_FAIL, PHONE_LOOKUP_LOOP eliminated). But more callers now <em>choose</em> to bail to a human mid-flow
+      (SPEAK_TO_SOMEONE = 41% of tracking failures, 28% of cancel failures). The intent-based agent filtered most callers out
+      before they entered flows. The GenAI agent lets more people in — and some opt out mid-flow.
+      Price adjustment success nearly <strong>tripled</strong>.
     </div>
   </div>
 </div>
@@ -124,7 +126,7 @@
   <h2>📞 Top Handoff Reasons (Voice)</h2>
   <div class="grid-2">
     <div class="card">
-      <h3>Classic — Mar 17–23 (6,813 calls)</h3>
+      <h3>Intent-Based — Mar 17–23 (6,813 calls)</h3>
       <table>
         <tr><th>Reason</th><th>Count</th><th>%</th></tr>
         <tr><td>SPEAK_TO_SOMEONE</td><td>2,201</td><td>32.3%</td></tr>
@@ -205,7 +207,7 @@ Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-ser
 new Chart(document.getElementById('reductionChart'),{
   type:'bar',
   data:{
-    labels:[['Classic','(Mar 17-23)'],['GenAI','(Mar 25-26)'],['GenAI','(Mar 25)'],['GenAI','(Mar 26)']],
+    labels:[['Intent-Based','(Mar 17-23)'],['GenAI','(Mar 25-26)'],['GenAI','(Mar 25)'],['GenAI','(Mar 26)']],
     datasets:[{label:'Reduction Rate %',data:[24.7,40.2,34.0,50.8],
       backgroundColor:['rgba(139,148,158,.4)','rgba(63,185,80,.5)','rgba(188,140,255,.4)','rgba(57,210,192,.4)'],
       borderColor:['#8b949e','#3fb950','#bc8cff','#39d2c0'],borderWidth:2,borderRadius:6}]
@@ -222,7 +224,7 @@ new Chart(document.getElementById('handoffChart'),{
   data:{
     labels:['Contained (Old)','Handed Off (Old)','Contained (New)','Handed Off (New)'],
     datasets:[
-      {label:'Classic',data:[1686,5127],backgroundColor:['rgba(139,148,158,.3)','rgba(248,81,73,.3)'],borderColor:['#8b949e','#f85149'],borderWidth:2},
+      {label:'Intent-Based',data:[1686,5127],backgroundColor:['rgba(139,148,158,.3)','rgba(248,81,73,.3)'],borderColor:['#8b949e','#f85149'],borderWidth:2},
       {label:'GenAI',data:[408,607],backgroundColor:['rgba(63,185,80,.3)','rgba(248,81,73,.15)'],borderColor:['#3fb950','#f85149'],borderWidth:2}
     ]
   },
