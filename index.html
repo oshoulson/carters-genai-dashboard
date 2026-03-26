@@ -70,15 +70,9 @@
 <!-- Reduction Rate Chart -->
 <div class="section">
   <h2>📊 Reduction Rate Comparison</h2>
-  <div class="grid-2">
-    <div class="card">
-      <h3>Before vs After (Voice)</h3>
-      <div class="chart-wrap"><canvas id="reductionChart"></canvas></div>
-    </div>
-    <div class="card">
-      <h3>Handoff Breakdown (Voice)</h3>
-      <div class="chart-wrap"><canvas id="handoffChart"></canvas></div>
-    </div>
+  <div class="card" style="max-width:600px">
+    <h3>Handoff Breakdown (Voice)</h3>
+    <div class="chart-wrap"><canvas id="handoffChart"></canvas></div>
   </div>
 </div>
 
@@ -203,21 +197,6 @@
 <script>
 Chart.defaults.color='#8b949e';
 Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
-
-new Chart(document.getElementById('reductionChart'),{
-  type:'bar',
-  data:{
-    labels:[['Intent-Based','(Mar 17-23)'],['GenAI','(Mar 25-26)'],['GenAI','(Mar 25)'],['GenAI','(Mar 26)']],
-    datasets:[{label:'Reduction Rate %',data:[24.7,40.2,34.0,50.8],
-      backgroundColor:['rgba(139,148,158,.4)','rgba(63,185,80,.5)','rgba(188,140,255,.4)','rgba(57,210,192,.4)'],
-      borderColor:['#8b949e','#3fb950','#bc8cff','#39d2c0'],borderWidth:2,borderRadius:6}]
-  },
-  options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{y:{beginAtZero:true,max:70,grid:{color:'#30363d'},ticks:{callback:v=>v+'%',font:{size:13}}},x:{grid:{display:false},ticks:{font:{size:13},color:'#e6edf3'}}}
-  },
-  plugins:[{afterDraw(c){const ctx=c.ctx;c.data.datasets[0].data.forEach((v,i)=>{const m=c.getDatasetMeta(0).data[i];ctx.fillStyle='#e6edf3';ctx.font='bold 14px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText(v+'%',m.x,m.y-8)})}}]
-});
 
 new Chart(document.getElementById('handoffChart'),{
   type:'doughnut',
